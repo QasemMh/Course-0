@@ -13,6 +13,16 @@ namespace SendEmailTest
             try
             {
                 //enble POP & IMAP >> outlook.com > setting > sync mail > enable POP option > yes 
+                /*
+                    Open your desired outlook / office 365 mail account.
+                    Click on settings.
+                    Scroll down and click on "view all outlook settings"
+                    Click on Email.
+                    Click on Sync Mail.
+                    Scroll down till you see "POP and IMAP"
+                    Under POP options, Click on "Yes"
+                    Click on Save.
+                */
                 //outlook email: asdfrgtbgh@outlook.com
                 //pass: kasem2000
 
