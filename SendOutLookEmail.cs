@@ -26,9 +26,11 @@ namespace SendEmailTest
                 mySmtpClient.Credentials = basicAuthenticationInfo;
 
                 // add from,to mailaddresses
+                //use your email
                 MailAddress from = new MailAddress("asdfrgtbgh@outlook.com", "Market Store Admin");
 
                 //Send mail to:
+                //use customer email
                 MailAddress to = new MailAddress("qm84028@gmail.com", "Customer:");
                 using MailMessage myMail = new MailMessage(from, to);
 
