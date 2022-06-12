@@ -1,0 +1,171 @@
+@model List<ProductSalesViewModel>
+
+@{
+    ViewData["Title"] = "Report";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<h1 class="h3 mb-4 text-gray-800">Store Financial Report</h1>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 d-flex flex-wrap justify-content-between align-items-center">
+
+
+
+                <div class="w-100" id="form-filterd">
+                    <form asp-action="StoreFinancialReport" method="get">
+                        <div class="card-body">
+                            <div class="row align-content-center">
+
+                                <div class="col-md-12">
+
+                                    <div class="form-group w-50">
+                                        <label for="userId">Select Store</label>
+                                        <select class="form-control" required name="storeId" id="storeId"
+                                                asp-items="@ViewBag.Stores">
+                                            <option selected disabled>---Select Store---</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="form-group w-50 w-50">
+                                        <label for="fromDate">From</label>
+                                        <input type="date" id="fromDate"
+                                               value="@(ViewBag.fromDate?? "")" class="form-control" name="fromDate" />
+                                    </div>
+                                    <div class="form-group w-50 w-50">
+                                        <label for="toDate">To</label>
+                                        <input type="date" id="toDate"
+                                               value="@(ViewBag.toDate?? "")" class="form-control" name="toDate" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <button class="btn btn-outline-success" type="submit">
+                                <i class="fas fa-sort-alpha-up"></i> Filter
+                            </button>
+                            <a class="btn btn-outline-secondary" asp-action="StoreFinancialReport">
+                                <i class="fas fa-undo"></i> Reset
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="w-100 mt-4">
+
+                    @if (ViewBag.Store as Store != null)
+                    {
+                        <ul class="list-group list-group-horizontal-lg">
+                            <li class="list-group-item">Store:  @ViewBag.Store.Name</li>
+                            <li class="list-group-item">Store Products:  @ViewBag.StoreProductCount</li>
+                            <li class="list-group-item">Category:  @ViewBag.Store.StoreCategory.Name</li>
+                            <li class="list-group-item">Report Date:@(ViewBag.fromDate?? "") / @(ViewBag.toDate?? "") </li>
+                        </ul>
+
+                    }
+
+                </div>
+
+
+
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="example" width="100%" cellspacing="0">
+
+
+                        <tbody>
+                            <tr>
+                                <th>Id</th>
+                                <th>Product Name</th>
+                                <th>Product Price</th>
+                                <th>Product in Stock</th>
+                                <th>Product Sales</th>
+                                <th>Total Sales(jo)</th>
+                            </tr>
+                            @{
+                                int index = 1;
+                                decimal total = 0;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                total += item.Total;
+                                <tr>
+                                    <td>@(index++)</td>
+                                    <td>@item.Product.Name</td>
+                                    <td>@item.Product.Price</td>
+                                    <td>@item.Product.Quantitiy</td>
+                                    <td>@item.Sales</td>
+                                    <td>@item.Total</td>
+
+                                </tr>
+                            }
+                            <tr>
+                                <th colspan="5">Total </th>
+                                <th>@total</th>
+                            </tr>
+                            @if (ViewBag.Store != null)
+                            {
+                                <tr>
+                                    <th colspan="6" class="text-center">Store Information</th>
+                                </tr>
+
+                                <tr>
+                                    <th>Store:  @ViewBag.Store.Name</th>
+                                    <th>Store Products:  @ViewBag.StoreProductCount</th>
+                                    <th>Category:  @ViewBag.Store.StoreCategory.Name</th>
+                                    <th colspan="3">Report Date:@(ViewBag.fromDate?? "") / @(ViewBag.toDate?? "") </th>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+                <button class="btn btn-success" id="print"
+                        onclick="window.print()">
+                    Print
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js"
+        integrity="sha512-XmZS54be9JGMZjf+zk61JZaLZyjTRgs41JLSmx5QlIP5F+sSGIyzD2eJyxD4K6kGGr7AsVhaitzZ2WTfzpsQzg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
+    <script>
+        let uid = Math.random().toString(36).substr(2, 9);
+        TableExport.prototype.defaultButton = "btn-outline-success mx-1";
+        TableExport.prototype.bootstrapConfig = ["btn", "btn-success m-1", "btn-toolbar"];
+
+        TableExport(document.getElementById("example"), {
+            filename: 'Stores_' + uid,
+            sheetname: "sheet1",
+            bootstrap: true,
+            position: "top",
+        });
+
+    </script>
+
+
+
+
+
+}
